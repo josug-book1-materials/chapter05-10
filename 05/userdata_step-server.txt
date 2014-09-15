@@ -1,7 +1,8 @@
 #!/bin/bash
 cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 yum install -q -y http://rdo.fedorapeople.org/rdo-release.rpm
-yum install -q -y python-novaclient \
+yum install -q -y bash-completion \
+ python-novaclient \
  python-neutronclient \
  python-glanceclient \
  python-cinderclient \
