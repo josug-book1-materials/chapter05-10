@@ -1,0 +1,13 @@
+IMAGE_NAME=centos-base
+
+AZ_NAME=az1
+#AZ_NAME=nova
+
+EXT_NET_NAME=Ext-Net
+#EXT_NET_NAME=public
+
+EXT_ROUTER_NAME=Ext-Router
+
+DNS_SERVER_1st=8.8.8.8
+DNS_SERVER_2nd=8.8.4.4
+
