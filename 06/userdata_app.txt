@@ -1,0 +1,8 @@
+#!/bin/bash
+cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+cd /root
+git clone -q https://github.com/josug-book1-materials/sample-app.git
+cd sample-app
+git checkout -b v1.0 remotes/origin/v1.0
+sh /root/sample-app/server-setup/install_rest.sh
+
