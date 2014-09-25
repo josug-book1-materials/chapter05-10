@@ -1,0 +1,17 @@
+#!/bin/bash
+cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+cd /root
+git clone https://github.com/josug-book1-materials/sample-app.git
+cd sample-app
+git checkout -b v1.0 remotes/origin/v1.0
+sh /root/sample-app/server-setup/install_web.sh
+
+MY_REST_IP=`curl -S -s http://169.254.169.254/openstack/latest/meta_data.json \
+| python -c \
+"import json,sys; print json.load(sys.stdin).get('meta').get('rest_ip')"`
+
+sed -i -e "s/rest_host = 127.0.0.1/rest_host = ${MY_REST_IP:?}/" \
+/root/sample-app/endpoint.conf
+
+sh /root/sample-app/server-setup/web.init.sh start
+
