@@ -1,8 +1,11 @@
 #!/bin/bash
 
-WORK_DIR=$HOME/chap06
+cd $(dirname $0)
+
 OPENRC=$HOME/openrc
-ENVFILE=$HOME/josug-book1-materials/chapter05-10/env.sh
+ENVFILE=../env.sh
+WORK_DIR=$HOME/work_chap06
+
 
 source $OPENRC
 source $ENVFILE
@@ -59,27 +62,6 @@ echo "
 
 
 
-echo "### create userdata file for dbs"
-echo "#!/bin/bash" > userdata_web.txt
-echo "
-cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
-cd /root
-git clone -q https://github.com/josug-book1-materials/sample-app.git
-cd sample-app
-git checkout -b v1.0 remotes/origin/v1.0
-sh /root/sample-app/server-setup/install_db.sh
-" >> userdata_web.txt
-
-
-
-
-
-
-
-
-
-
-
 
 function get_uuid () { cat - | grep " id " | awk '{print $4}'; }
 export MY_DMZ_NET=`neutron net-show dmz-net | get_uuid`
@@ -93,16 +75,6 @@ export MY_DBS_NET=`neutron net-show dbs-net | get_uuid`
 
 
 echo "### boot step-server"
-function get_uuid () { cat - | grep " id " | awk '{print $4}'; }
-export MY_WORK_NET=`neutron net-show work-net | get_uuid`
-nova boot --flavor standard.xsmall \
---image "${IMAGE_NAME}" \
---key-name key-for-step-server \
---security-groups sg-for-step-server  \
---user-data userdata_step-server.txt \
---availability-zone ${AZ_NAME} \
---nic net-id=${MY_WORK_NET} step-server
-
 
 retval=1
 while [ $retval -eq 1 ]
