@@ -5,7 +5,7 @@ cd $(dirname $0)
 OPENRC=$HOME/openrc
 ENVFILE=../lib/env.sh
 GOODIESFILE=../lib/goodies.sh
-WORK_DIR=$HOME/work_chap05
+WORK_DIR=$HOME/work_chapter
 
 source $OPENRC
 source $ENVFILE
@@ -86,8 +86,9 @@ sleep 30
 
 
 echo "### access test to step server"
-ssh -o 'StrictHostKeyChecking no' -i key-for-step-server.pem root@${STEP_SERVER_IP:?} hostname
-
+ssh -o 'StrictHostKeyChecking no' -i key-for-step-server.pem root@${STEP_SERVER_IP:?} "hostname"
+ssh -o 'StrictHostKeyChecking no' -i key-for-step-server.pem root@${STEP_SERVER_IP:?} "which nova;which neutron;which glance;which cinder"
+ssh -o 'StrictHostKeyChecking no' -i key-for-step-server.pem root@${STEP_SERVER_IP:?} "cat /root/openrc"
 
 echo "### create virtual networks for SNSapp"
 neutron net-create dmz-net

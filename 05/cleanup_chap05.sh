@@ -5,7 +5,7 @@ cd $(dirname $0)
 OPENRC=$HOME/openrc
 ENVFILE=../lib/env.sh
 GOODIESFILE=../lib/goodies.sh
-WORK_DIR=$HOME/work_chap05
+WORK_DIR=$HOME/work_chapter
 
 source $OPENRC
 source $ENVFILE
@@ -33,3 +33,11 @@ neutron net-delete dbs-net
 neutron net-delete work-net
 
 neutron router-delete Ext-Router
+
+echo "### check status"
+nova list
+nova keypair-list
+nova secgroup-list
+neutron net-list
+nova floating-ip-list
+echo "### end script"
