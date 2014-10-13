@@ -1,4 +1,4 @@
-echo "" >> userdata_web03.txt
+echo "#!/bin/bash" > userdata_web03.txt
 echo "sh /root/sample-app/server-setup/web.init.sh start" >> userdata_web03.txt
 
 function get_uuid () { cat - | grep " id " | awk '{print $4}'; }

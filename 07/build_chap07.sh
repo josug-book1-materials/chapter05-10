@@ -23,7 +23,7 @@ cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 cat << EOF > /etc/yum.repos.d/nginx.repo
 [nginx]
 name=nginx repo
-baseurl=http://nginx.org/packages/centos/\$releasever/\$basearch/
+baseurl=http://nginx.org/packages/centos/\\\$releasever/\\\$basearch/
 gpgcheck=0
 enabled=1
 EOF
@@ -36,7 +36,7 @@ export MY_DMZ_NET=`neutron net-show dmz-net | get_uuid`
 export MY_APP_NET=`neutron net-show app-net | get_uuid`
 export MY_DBS_NET=`neutron net-show dbs-net | get_uuid`
 
-echo "### boot servers"
+echo "### boot lbs01 servers"
 nova boot --flavor standard.xsmall --image "centos-base" \
 --key-name key-for-internal --user-data userdata_lbs.txt \
 --security-groups sg-all-from-console,sg-web-from-internet \
@@ -44,8 +44,7 @@ nova boot --flavor standard.xsmall --image "centos-base" \
 lbs01
 
 
-
-echo "### boot servers"
+echo "### boot web02 servers"
 nova boot --flavor standard.xsmall --image "centos-base" \
 --key-name key-for-internal --user-data userdata_web.txt \
 --security-groups sg-all-from-console,sg-web-from-internet,sg-all-from-app-net \
@@ -73,9 +72,11 @@ EOF
 
 
 scp -o 'StrictHostKeyChecking no' -i key-for-internal.pem endpoint.conf.web02 root@${WEB02_IP:?}:/root/sample-app/endpoint.conf
-ssh -o 'StrictHostKeyChecking no' -i key-for-internal.pem root@${WEB01_IP:?} "ps -ef > /root/ps.txt"
-ssh -o 'StrictHostKeyChecking no' -i key-for-internal.pem root@${WEB01_IP:?} "pip freeze > /root/pip.txt"
-#ssh -o 'StrictHostKeyChecking no' -i key-for-internal.pem root@${WEB01_IP:?} "sh /root/sample-app/server-setup/web.init.sh start"
+ssh -o 'StrictHostKeyChecking no' -i key-for-internal.pem root@${WEB02_IP:?} "ps -ef > /root/ps.txt"
+ssh -o 'StrictHostKeyChecking no' -i key-for-internal.pem root@${WEB02_IP:?} "pip freeze > /root/pip.txt"
+ssh -o 'StrictHostKeyChecking no' -i key-for-internal.pem root@${WEB02_IP:?} "shutdown -h now"
+
+#ssh -o 'StrictHostKeyChecking no' -i key-for-internal.pem root@${WEB02_IP:?} "sh /root/sample-app/server-setup/web.init.sh start"
 
 
 #echo "### attach floating ip"

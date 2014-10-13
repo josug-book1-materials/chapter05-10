@@ -1,0 +1,30 @@
+#!/bin/bash
+cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+cd /root; git clone https://github.com/josug-book1-materials/sample-app.git
+cd sample-app; git checkout -b v2.0 remotes/origin/v2.0
+sh /root/sample-app/server-setup/install_web.sh
+
+function get_metadata () { curl -S -s http://169.254.169.254/openstack/latest/meta_data.json \
+| python -c "import json,sys; print json.load(sys.stdin).get('meta').get('${1:?}')"; }
+
+MY_REST_IP=`get_metadata rest_ip`;         MY_KEYSTONE_URL=`get_metadata keystone_url`
+MY_REGION_NAME=`get_metadata region_name`; MY_TENANT_NAME=`get_metadata tenant_name`
+MY_USER_NAME=`get_metadata user_name`;     MY_PASSWORD=`get_metadata password`
+
+cat << EOF > /root/sample-app/endpoint.conf
+[rest-server]
+rest_host = ${MY_REST_IP:?}
+rest_endpoint = http://%(rest_host)s:5555/bbs
+
+[swift]
+container_name = sample_bbs
+upload_path = /tmp/flask/
+
+keystone_url = ${MY_KEYSTONE_URL:?}
+region_name = ${MY_REGION_NAME:?}
+tenant_name = ${MY_TENANT_NAME:?}
+user_name = ${MY_USER_NAME:?}
+password = ${MY_PASSWORD:?}
+EOF
+
+sh /root/sample-app/server-setup/web.init.sh start

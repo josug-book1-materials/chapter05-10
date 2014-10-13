@@ -1,0 +1,15 @@
+#!/bin/bash
+cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+cd /root
+git clone https://github.com/josug-book1-materials/sample-app.git
+cd sample-app
+git checkout -b v2.0 remotes/origin/v2.0
+sh /root/sample-app/server-setup/install_rest.sh
+
+function get_metadata () { curl -S -s http://169.254.169.254/openstack/latest/meta_data.json \
+| python -c "import json,sys; print json.load(sys.stdin).get('meta').get('${1:?}')"; }
+
+MY_DBS_IP=`get_metadata dbs_ip`
+sed -i -e "s/db_host = localhost/db_host = ${MY_DBS_IP:?}/" /root/sample-app/endpoint.conf
+
+sh /root/sample-app/server-setup/rest.init.sh start
