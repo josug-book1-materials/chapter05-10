@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd $(dirname $0)
+TOP_DIR=$(pwd)
 
 OPENRC=$HOME/openrc
 ENVFILE=../lib/env.sh
@@ -41,24 +42,7 @@ neutron security-group-rule-create --ethertype IPv4 --protocol icmp \
 
 
 echo "### create userdata file"
-echo "#!/bin/bash" > userdata_step-server.txt
-echo "
-cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
-yum install -q -y http://rdo.fedorapeople.org/rdo-release.rpm
-yum install -q -y python-novaclient \
- python-neutronclient \
- python-glanceclient \
- python-cinderclient \
- python-swiftclient \
- python-keystoneclient
-cat << EOF > /root/openrc
-export OS_AUTH_URL=${OS_AUTH_URL}
-export OS_REGION_NAME=${OS_REGION_NAME}
-export OS_TENANT_NAME=${OS_TENANT_NAME}
-export OS_USERNAME=${OS_USERNAME}
-export OS_PASSWORD=${OS_PASSWORD}
-EOF
-" >> userdata_step-server.txt
+cp $TOP_DIR/userdata_step-server.txt userdata_step-server.txt
 
 echo "### boot step-server"
 function get_uuid () { cat - | grep " id " | awk '{print $4}'; }

@@ -1,7 +1,8 @@
 #!/bin/bash
 cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 yum install -q -y git
-git clone -q https://github.com/josug-book1-materials/install_cli.git
+cd /root
+git clone https://github.com/josug-book1-materials/install_cli.git
 cd install_cli && sh install.sh
 cat << EOF > /root/openrc
 export OS_AUTH_URL=http://192.168.100.10:5000/v2/
