@@ -5,7 +5,7 @@ cd /root
 git clone https://github.com/josug-book1-materials/install_cli.git
 cd install_cli && sh install.sh
 cat << EOF > /root/openrc
-export OS_AUTH_URL=http://192.168.100.10:5000/v2/
+export OS_AUTH_URL=http://192.168.100.10:5000/v2.0/
 export OS_REGION_NAME=RegionOne
 export OS_TENANT_NAME=SNSApp
 export OS_USERNAME=snsapp-infra-user
