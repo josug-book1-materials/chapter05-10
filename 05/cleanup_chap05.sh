@@ -35,9 +35,16 @@ neutron net-delete work-net
 neutron router-delete Ext-Router
 
 echo "### check status"
+echo "## server list"
 nova list
+echo "## server list"
 nova keypair-list
+echo "## security group list"
 nova secgroup-list
+echo "## network list"
 neutron net-list
+echo "## router list"
+neutron router-list
+echo "## Floating IP list"
 nova floating-ip-list
 echo "### end script"
