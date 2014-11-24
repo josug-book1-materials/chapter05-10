@@ -1,0 +1,2 @@
+#!/bin/bash
+sh /root/sample-app/server-setup/web.init.sh start

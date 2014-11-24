@@ -57,7 +57,7 @@ WEB02_IP=`get_instane_ip web02 dmz-net`
 
 wait_ping_resp $WEB02_IP
 
-echo "### (30sec)wait step-server to start sshd"
+echo "### (30sec)wait $WEB02_IP to start sshd"
 sleep 30
 
 wait_yum_pip $WEB02_IP
