@@ -63,3 +63,64 @@ function wait_yum_pip () {
         fi
     done
 }
+
+wait_for_cinder() {
+    local restype=${1:?}
+    local name=${2:?}
+    local status=${3:-available}
+    local interval=${4:-5}
+    local timeout=${5:-600}
+
+    local cmd
+    if [ "$restype" = "volume" ]; then
+        cmd=list
+    else
+        cmd=$restype-list
+    fi
+
+    local elapsed=0
+    echo "### check cinder $restype from $name"
+    while [ $timeout -ge 0 ]; do
+        cinder $cmd | grep $name | grep $status > /dev/null
+        if [ $? -eq 0 ]; then
+            echo "### $name is now $status."
+            return
+        fi
+        echo "waiting to become $status: $elapsed"
+        timeout=`expr $timeout - $interval`
+        elapsed=`expr $elapsed + $interval`
+        sleep $interval
+    done
+    echo "$name has not become $status in $timeout seconds!"
+    exit 1
+}
+
+wait_for_cinder_delete() {
+    local restype=${1:?}
+    local name=${2:?}
+    local interval=${3:-5}
+    local timeout=${4:-600}
+
+    local cmd
+    if [ "$restype" = "volume" ]; then
+        cmd=list
+    else
+        cmd=$restype-list
+    fi
+
+    local elapsed=0
+    echo "### check cinder $restype from $name"
+    while [ $timeout -ge 0 ]; do
+        cinder $cmd | grep $name > /dev/null
+        if [ $? -eq 1 ]; then
+            echo "### $name has been deleted."
+            return
+        fi
+        echo "waiting to be deleted: $elapsed"
+        timeout=`expr $timeout - $interval`
+        elapsed=`expr $elapsed + $interval`
+        sleep $interval
+    done
+    echo "$name has not been deleted in $timeout seconds!"
+    exit 1
+}
