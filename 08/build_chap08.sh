@@ -11,10 +11,10 @@ source $OPENRC
 source $ENVFILE
 source $GOODIESFILE
 
+mkdir -p $WORK_DIR
 cp -v userdata_v2_app.txt $WORK_DIR
 cp -v userdata_v2_web.txt $WORK_DIR
 
-mkdir -p $WORK_DIR
 cd $WORK_DIR
 
 export MY_DMZ_NET=`neutron net-show dmz-net | get_uuid`
